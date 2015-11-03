@@ -1,4 +1,4 @@
-import socket, sys, time, packet
+import socket, sys, time, packet, network_utils
 
 # pour convertir les structs C recue sur le reseau en python (fonctions pack et unpack)
 from struct import *
@@ -35,11 +35,6 @@ class Capture(Thread):
         # On s'assure que la capture n'est pas arretee des le lancement
         self.shutdown = False
 
-        #Convert a string of 6 characters of ethernet address into a dash separated hex string
-        def eth_addr (a) :
-          b = "%.2x:%.2x:%.2x:%.2x:%.2x:%.2x" % (ord(a[0]) , ord(a[1]) , ord(a[2]), ord(a[3]), ord(a[4]) , ord(a[5]))
-          return b
-
         # creation du socket (0x0003 est defini comme etant ETH_P_ALL en C, tout les paquets ethernet)
         try :
             sock = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(0x0003))
@@ -75,8 +70,8 @@ class Capture(Thread):
             # on recupere le protocole (ntohs fait la conversion d'Int des bits reseau au bits machine (si differents))
             eth_protocol = socket.ntohs(eth[2])
             eth_layer['Type'] = eth_protocol
-            eth_layer['Destination MAC'] = eth_addr(sockPacket[0:6])
-            eth_layer['Source MAC'] = eth_addr(sockPacket[6:12])
+            eth_layer['Destination MAC'] = network_utils.eth_addr(sockPacket[0:6])
+            eth_layer['Source MAC'] = network_utils.eth_addr(sockPacket[6:12])
 
             # On rajoute la couche Ethernet recuperee dans le paquet a ajouter au resultat
             packetToAdd.add_layer(eth_layer)

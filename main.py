@@ -1,9 +1,7 @@
 import sys, capture, time
 import lib.hexdump as hexdump
 
-
 # EXEMPLE D'UTILISATION DE LA CLASSE CAPTURE
-
 test = capture.Capture()
 
 # on lance la capture
