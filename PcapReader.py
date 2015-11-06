@@ -13,18 +13,23 @@ class PcapReader(object):
         super(PcapReader, self).__init__()
         self._packets = []
         self._file = None
-        self.set_file(path)
+        self.open_file(path)
 
     def get_packets(self):
         return self._packets
 
-    def set_file(self, path):
+    def open_file(self, path):
         if self._file is not None:
             self._file.close()
         try:
             self._file = open(path, 'r')
         except IOError, msg:
             print "Error : PcapReader can't open file "+"'"+path+"' : "+str(msg)
+
+    def close_file(self):
+        if self._file is not None:
+            self._file.close()
+            self._file = None
 
     def parse(self):
         if self._file is None:
@@ -109,3 +114,4 @@ class PcapReader(object):
                 # On rajoute la couche UDP recuperee au paquet
                 packet.add_layer(udp_layer)
             self._packets.append(packet)
+        self.close_file()
