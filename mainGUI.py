@@ -14,7 +14,7 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         super(self.__class__, self).__init__()
         self.setupUi(self)
 
-        self.startCaptureBtn.clicked.connect(self.start_capture)
+        self.startCaptureBtn.triggered.connect(self.start_capture)
 
         # Variables pour contenir les paquets traites (evite de les stocker sous formes d'objet Qt)
         self.currentPackets = []
@@ -45,7 +45,7 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         # Signale qui indique que l'user n'a pas les droits suffisants pour capturer des paquets sur le reseau
         self.connect(self.captureThread, SIGNAL("error_user_privilege(QString)"), self.error_user_privilege)
         # On bind le bouton stop
-        self.stopCaptureBtn.clicked.connect(self.captureThread.terminate)
+        self.stopCaptureBtn.triggered.connect(self.captureThread.terminate)
 
         self.stopCaptureBtn.setEnabled(True)
         self.startCaptureBtn.setEnabled(False)
