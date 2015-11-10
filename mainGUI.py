@@ -1,5 +1,7 @@
 from PyQt4 import QtGui, QtCore  # Import the PyQt4 module we'll need
 import sys  # We need sys so that we can pass argv to QApplication
+import lib.hexdump as hexdump
+
 
 import mainWindow  # This file holds our MainWindow and all design related things
 
@@ -15,6 +17,8 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         self.setupUi(self)
 
         self.startCaptureBtn.triggered.connect(self.start_capture)
+        self.open_pcap_file.triggered.connect(self.open_pcap)
+        self.exitBtn.triggered.connect(self.close)
 
         # Variables pour contenir les paquets traites (evite de les stocker sous formes d'objet Qt)
         self.currentPackets = []
@@ -22,17 +26,14 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         # Counter de nombre de paquets
         self.packetsCounter = 0
 
-        # On set les colonnes de la liste
-        listHeaderLabels = QtCore.QStringList()
-        listHeaderLabels.append('#')
-        listHeaderLabels.append('Time')
-        listHeaderLabels.append('Source')
-        listHeaderLabels.append('Destination')
-        listHeaderLabels.append('Protocol')
-        self.packetsList.setHeaderLabels(listHeaderLabels)
-        self.packetsList.setSortingEnabled(True)
+        # On bind le clic sur un item de la liste
+        self.packetsList.itemSelectionChanged.connect(self.packet_selected)
 
 
+    def open_pcap(self):
+         fileName = QtGui.QFileDialog.getOpenFileName(self, "Open File", "/home", "Pcap files (*.pcap)");
+         if fileName:
+             print fileName
 
     def start_capture(self):
         print('Starting capture from GUI')
@@ -69,11 +70,50 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         self.packetsCounter += 1
 
         item = QtGui.QTreeWidgetItem(self.packetsList)
-        item.setText(0, str(packetToAdd.id))
-        item.setText(1, str(packetToAdd.created))
+        item.setText(0, str(packetToAdd.created))
+        item.setText(1, str(packetToAdd.id))
         item.setText(2, str(packetToAdd.layers[1]['Source Address']))
         item.setText(3, str(packetToAdd.layers[1]['Destination Address']))
         item.setText(4, str(packetToAdd.layers[2]['LayerType']))
+
+
+    def packet_selected(self):
+
+        # on clear
+        self.tab_ethernet_list.clear()
+        self.tab_ip_list.clear()
+        self.tab_protocol_list.clear()
+
+        # on recupere la selection
+        selected = self.packetsList.selectedItems()
+        selected = selected[0]
+
+        # on recherche le paquet complet dans currentPackets (le QTreeWidget n'a pas toutes les infos)
+        fullPacket = next((packet for packet in self.currentPackets if packet.id == int(selected.text(1))), None)
+
+        # premier onglet (hexdump)
+        hexdumpString = hexdump.hexdump(fullPacket.packet, 'return')
+        self.tab_packet_hexdump.setText(hexdumpString)
+
+        #deuxieme onglet (ethernet)
+        for key,value in fullPacket.layers[0].items() :
+            item = QtGui.QTreeWidgetItem(self.tab_ethernet_list)
+            item.setText(0, str(key))
+            item.setText(1, str(value))
+
+        #troisieme onglet (ip)
+        for key,value in fullPacket.layers[1].items() :
+            item = QtGui.QTreeWidgetItem(self.tab_ip_list)
+            item.setText(0, str(key))
+            item.setText(1, str(value))
+
+        #quatrieme onglet (protocole)
+        self.packetDetail.setTabText(3, fullPacket.layers[2]['LayerType'])
+        for key,value in fullPacket.layers[2].items() :
+            item = QtGui.QTreeWidgetItem(self.tab_protocol_list)
+            item.setText(0, str(key))
+            item.setText(1, str(value))
+
 
 
 

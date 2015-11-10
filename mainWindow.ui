@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>696</width>
-    <height>618</height>
+    <width>850</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,6 +19,11 @@
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QTreeWidget" name="packetsList">
+        <property name="styleSheet">
+         <string notr="true">font: 11pt &quot;Cantarell&quot;;
+selection-background-color: rgb(199, 199, 199);
+</string>
+        </property>
         <property name="rootIsDecorated">
          <bool>false</bool>
         </property>
@@ -32,14 +37,215 @@
          <bool>true</bool>
         </property>
         <property name="columnCount">
-         <number>0</number>
+         <number>5</number>
         </property>
         <attribute name="headerVisible">
          <bool>true</bool>
         </attribute>
+        <attribute name="headerDefaultSectionSize">
+         <number>150</number>
+        </attribute>
+        <attribute name="headerMinimumSectionSize">
+         <number>150</number>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>Time</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>#</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Source</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Destination</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Protocol</string>
+         </property>
+        </column>
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="1" column="0">
+     <widget class="QTabWidget" name="packetDetail">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>400</height>
+       </size>
+      </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::North</enum>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab_packet">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(52, 52, 52);
+color: rgb(255, 255, 255);</string>
+       </property>
+       <attribute name="title">
+        <string>Packet</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="QTextBrowser" name="tab_packet_hexdump">
+          <property name="html">
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Cantarell'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;No packet selected&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_ethernet">
+       <attribute name="title">
+        <string>Ethernet</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="0" column="0">
+         <widget class="QTreeWidget" name="tab_ethernet_list">
+          <property name="styleSheet">
+           <string notr="true">font: 11pt &quot;Cantarell&quot;;
+background-color: rgb(52, 52, 52);
+color: rgb(255, 255, 255);</string>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::NoSelection</enum>
+          </property>
+          <property name="rootIsDecorated">
+           <bool>false</bool>
+          </property>
+          <attribute name="headerVisible">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="headerDefaultSectionSize">
+           <number>200</number>
+          </attribute>
+          <attribute name="headerMinimumSectionSize">
+           <number>200</number>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>Field name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Value</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_ip">
+       <attribute name="title">
+        <string>IP</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_7">
+        <item row="0" column="0">
+         <widget class="QTreeWidget" name="tab_ip_list">
+          <property name="styleSheet">
+           <string notr="true">font: 11pt &quot;Cantarell&quot;;
+background-color: rgb(52, 52, 52);
+color: rgb(255, 255, 255);</string>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::NoSelection</enum>
+          </property>
+          <property name="rootIsDecorated">
+           <bool>false</bool>
+          </property>
+          <property name="animated">
+           <bool>true</bool>
+          </property>
+          <attribute name="headerVisible">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="headerDefaultSectionSize">
+           <number>200</number>
+          </attribute>
+          <attribute name="headerMinimumSectionSize">
+           <number>200</number>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>Field name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Value</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_protocol">
+       <attribute name="title">
+        <string>Protocol</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="0">
+         <widget class="QTreeWidget" name="tab_protocol_list">
+          <property name="styleSheet">
+           <string notr="true">font: 11pt &quot;Cantarell&quot;;
+background-color: rgb(52, 52, 52);
+color: rgb(255, 255, 255);</string>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::NoSelection</enum>
+          </property>
+          <property name="rootIsDecorated">
+           <bool>false</bool>
+          </property>
+          <property name="animated">
+           <bool>true</bool>
+          </property>
+          <attribute name="headerVisible">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="headerDefaultSectionSize">
+           <number>200</number>
+          </attribute>
+          <attribute name="headerMinimumSectionSize">
+           <number>200</number>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>Field name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Value</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -55,21 +261,23 @@
     </size>
    </property>
    <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
+    <enum>LeftToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <addaction name="separator"/>
    <addaction name="startCaptureBtn"/>
    <addaction name="stopCaptureBtn"/>
+   <addaction name="open_pcap_file"/>
+   <addaction name="exitBtn"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>696</width>
+     <width>850</width>
      <height>29</height>
     </rect>
    </property>
@@ -77,8 +285,8 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionOpen_pcap_file"/>
-    <addaction name="actionSave_as_pcap_file"/>
+    <addaction name="open_pcap_file"/>
+    <addaction name="save_as_pcap_file"/>
     <addaction name="exitBtn"/>
    </widget>
    <widget class="QMenu" name="menuCapture">
@@ -118,17 +326,25 @@
     <string>Stop current capture</string>
    </property>
   </action>
-  <action name="actionOpen_pcap_file">
+  <action name="open_pcap_file">
+   <property name="icon">
+    <iconset>
+     <normaloff>img/open.png</normaloff>img/open.png</iconset>
+   </property>
    <property name="text">
     <string>Open pcap file</string>
    </property>
   </action>
-  <action name="actionSave_as_pcap_file">
+  <action name="save_as_pcap_file">
    <property name="text">
     <string>Save as pcap file</string>
    </property>
   </action>
   <action name="exitBtn">
+   <property name="icon">
+    <iconset>
+     <normaloff>img/exit.png</normaloff>img/exit.png</iconset>
+   </property>
    <property name="text">
     <string>Exit</string>
    </property>
