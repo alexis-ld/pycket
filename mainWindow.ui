@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>696</width>
-    <height>618</height>
+    <width>666</width>
+    <height>649</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,6 +19,11 @@
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QTreeWidget" name="packetsList">
+        <property name="styleSheet">
+         <string notr="true">font: 11pt &quot;Cantarell&quot;;
+selection-background-color: rgb(199, 199, 199);
+</string>
+        </property>
         <property name="rootIsDecorated">
          <bool>false</bool>
         </property>
@@ -32,14 +37,84 @@
          <bool>true</bool>
         </property>
         <property name="columnCount">
-         <number>0</number>
+         <number>5</number>
         </property>
         <attribute name="headerVisible">
          <bool>true</bool>
         </attribute>
+        <column>
+         <property name="text">
+          <string>Time</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>#</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Source</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Destination</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Protocol</string>
+         </property>
+        </column>
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="1" column="0">
+     <widget class="QTabWidget" name="packetDetail">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>250</height>
+       </size>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab_packet">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(52, 52, 52);
+color: rgb(255, 255, 255);</string>
+       </property>
+       <attribute name="title">
+        <string>Packet</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="QLabel" name="tab_packet_label">
+          <property name="text">
+           <string>No packet selected</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_eth">
+       <attribute name="title">
+        <string>Page</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Deuxieme page</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -58,7 +133,7 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <addaction name="separator"/>
    <addaction name="startCaptureBtn"/>
@@ -69,7 +144,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>696</width>
+     <width>666</width>
      <height>29</height>
     </rect>
    </property>

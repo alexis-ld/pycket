@@ -1,11 +1,16 @@
 from PyQt4 import QtGui, QtCore  # Import the PyQt4 module we'll need
 import sys  # We need sys so that we can pass argv to QApplication
+import lib.hexdump as hexdump
+
 
 import mainWindow  # This file holds our MainWindow and all design related things
 
 import captureThread
 
 from PyQt4.QtCore import SIGNAL
+
+
+
 
 
 
@@ -22,15 +27,9 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         # Counter de nombre de paquets
         self.packetsCounter = 0
 
-        # On set les colonnes de la liste
-        listHeaderLabels = QtCore.QStringList()
-        listHeaderLabels.append('#')
-        listHeaderLabels.append('Time')
-        listHeaderLabels.append('Source')
-        listHeaderLabels.append('Destination')
-        listHeaderLabels.append('Protocol')
-        self.packetsList.setHeaderLabels(listHeaderLabels)
-        self.packetsList.setSortingEnabled(True)
+        # On bind le clic sur un item de la liste
+        self.packetsList.itemSelectionChanged.connect(self.packet_selected)
+
 
 
 
@@ -69,13 +68,23 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         self.packetsCounter += 1
 
         item = QtGui.QTreeWidgetItem(self.packetsList)
-        item.setText(0, str(packetToAdd.id))
-        item.setText(1, str(packetToAdd.created))
+        item.setText(0, str(packetToAdd.created))
+        item.setText(1, str(packetToAdd.id))
         item.setText(2, str(packetToAdd.layers[1]['Source Address']))
         item.setText(3, str(packetToAdd.layers[1]['Destination Address']))
         item.setText(4, str(packetToAdd.layers[2]['LayerType']))
 
 
+    def packet_selected(self):
+
+        selected = self.packetsList.selectedItems()
+        selected = selected[0]
+
+        # on recherche le paquet complet dans currentPackets (le QTreeWidget n'a pas toutes les infos)
+        fullPacket = next((packet for packet in self.currentPackets if packet.id == int(selected.text(1))), None)
+        hexdumpString = hexdump.hexdump(fullPacket.packet, 'return')
+
+        self.tab_packet_label.setText(hexdumpString)
 
 
 def main():
