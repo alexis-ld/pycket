@@ -11,15 +11,14 @@ from PyQt4.QtCore import SIGNAL
 
 
 
-
-
-
 class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
     def __init__(self):
         super(self.__class__, self).__init__()
         self.setupUi(self)
 
         self.startCaptureBtn.triggered.connect(self.start_capture)
+        self.open_pcap_file.triggered.connect(self.open_pcap)
+        self.exitBtn.triggered.connect(self.close)
 
         # Variables pour contenir les paquets traites (evite de les stocker sous formes d'objet Qt)
         self.currentPackets = []
@@ -31,7 +30,10 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         self.packetsList.itemSelectionChanged.connect(self.packet_selected)
 
 
-
+    def open_pcap(self):
+         fileName = QtGui.QFileDialog.getOpenFileName(self, "Open File", "/home", "Pcap files (*.pcap)");
+         if fileName:
+             print fileName
 
     def start_capture(self):
         print('Starting capture from GUI')
@@ -77,14 +79,43 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
 
     def packet_selected(self):
 
+        # on clear
+        self.tab_ethernet_list.clear()
+        self.tab_ip_list.clear()
+        self.tab_protocol_list.clear()
+
+        # on recupere la selection
         selected = self.packetsList.selectedItems()
         selected = selected[0]
 
         # on recherche le paquet complet dans currentPackets (le QTreeWidget n'a pas toutes les infos)
         fullPacket = next((packet for packet in self.currentPackets if packet.id == int(selected.text(1))), None)
-        hexdumpString = hexdump.hexdump(fullPacket.packet, 'return')
 
-        self.tab_packet_label.setText(hexdumpString)
+        # premier onglet (hexdump)
+        hexdumpString = hexdump.hexdump(fullPacket.packet, 'return')
+        self.tab_packet_hexdump.setText(hexdumpString)
+
+        #deuxieme onglet (ethernet)
+        for key,value in fullPacket.layers[0].items() :
+            item = QtGui.QTreeWidgetItem(self.tab_ethernet_list)
+            item.setText(0, str(key))
+            item.setText(1, str(value))
+
+        #troisieme onglet (ip)
+        for key,value in fullPacket.layers[1].items() :
+            item = QtGui.QTreeWidgetItem(self.tab_ip_list)
+            item.setText(0, str(key))
+            item.setText(1, str(value))
+
+        #quatrieme onglet (protocole)
+        self.packetDetail.setTabText(3, fullPacket.layers[2]['LayerType'])
+        for key,value in fullPacket.layers[2].items() :
+            item = QtGui.QTreeWidgetItem(self.tab_protocol_list)
+            item.setText(0, str(key))
+            item.setText(1, str(value))
+
+
+
 
 
 def main():
