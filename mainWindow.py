@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Tue Nov 10 16:55:56 2015
+# Created: Thu Nov 12 15:31:53 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -33,6 +33,21 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        self.groupBox = QtGui.QGroupBox(self.centralwidget)
+        self.groupBox.setTitle(_fromUtf8(""))
+        self.groupBox.setObjectName(_fromUtf8("groupBox"))
+        self.horizontalLayout_2 = QtGui.QHBoxLayout(self.groupBox)
+        self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
+        self.label = QtGui.QLabel(self.groupBox)
+        self.label.setObjectName(_fromUtf8("label"))
+        self.horizontalLayout_2.addWidget(self.label)
+        self.filtersInput = QtGui.QLineEdit(self.groupBox)
+        self.filtersInput.setObjectName(_fromUtf8("filtersInput"))
+        self.horizontalLayout_2.addWidget(self.filtersInput)
+        self.filtersApplyBtn = QtGui.QPushButton(self.groupBox)
+        self.filtersApplyBtn.setObjectName(_fromUtf8("filtersApplyBtn"))
+        self.horizontalLayout_2.addWidget(self.filtersApplyBtn)
+        self.verticalLayout.addWidget(self.groupBox)
         self.packetsList = QtGui.QTreeWidget(self.centralwidget)
         self.packetsList.setStyleSheet(_fromUtf8("font: 11pt \"Cantarell\";\n"
 "selection-background-color: rgb(199, 199, 199);\n"
@@ -171,6 +186,10 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "Pycket", None))
+        self.label.setText(_translate("MainWindow", "Filters :", None))
+        self.filtersInput.setToolTip(_translate("MainWindow", "LayerType/Field/Value, LayerType/Field/Value, ....", None))
+        self.filtersInput.setStatusTip(_translate("MainWindow", "LayerType/Field/Value, LayerType/Field/Value, ....", None))
+        self.filtersApplyBtn.setText(_translate("MainWindow", "Apply", None))
         self.packetsList.setSortingEnabled(True)
         self.packetsList.headerItem().setText(0, _translate("MainWindow", "Time", None))
         self.packetsList.headerItem().setText(1, _translate("MainWindow", "#", None))

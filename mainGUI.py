@@ -1,7 +1,7 @@
 from PyQt4 import QtGui, QtCore  # Import the PyQt4 module we'll need
 import sys  # We need sys so that we can pass argv to QApplication
 import lib.hexdump as hexdump
-
+import packetFilter
 
 import mainWindow  # This file holds our MainWindow and all design related things
 
@@ -16,9 +16,12 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         super(self.__class__, self).__init__()
         self.setupUi(self)
 
+        #Action binding
         self.startCaptureBtn.triggered.connect(self.start_capture)
         self.open_pcap_file.triggered.connect(self.open_pcap)
         self.exitBtn.triggered.connect(self.close)
+
+        self.filtersApplyBtn.clicked.connect(self.refresh_list)
 
         # Variables pour contenir les paquets traites (evite de les stocker sous formes d'objet Qt)
         self.currentPackets = []
@@ -64,17 +67,30 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         self.stopCaptureBtn.setEnabled(False)
         self.startCaptureBtn.setEnabled(True)
 
+    def refresh_list(self):
+        self.packetsList.clear()
+        for packet in self.currentPackets:
+            if packetFilter.filterPacket(self.filtersInput.text(), packet):
+                item = QtGui.QTreeWidgetItem(self.packetsList)
+                item.setText(0, str(packet.created))
+                item.setText(1, str(packet.id))
+                item.setText(2, str(packet.layers[1]['Source Address']))
+                item.setText(3, str(packet.layers[1]['Destination Address']))
+                item.setText(4, str(packet.layers[2]['LayerType']))
+
+
     def add_packet(self, packetToAdd):
         packetToAdd.id = self.packetsCounter
         self.currentPackets.append(packetToAdd)
         self.packetsCounter += 1
 
-        item = QtGui.QTreeWidgetItem(self.packetsList)
-        item.setText(0, str(packetToAdd.created))
-        item.setText(1, str(packetToAdd.id))
-        item.setText(2, str(packetToAdd.layers[1]['Source Address']))
-        item.setText(3, str(packetToAdd.layers[1]['Destination Address']))
-        item.setText(4, str(packetToAdd.layers[2]['LayerType']))
+        if packetFilter.filterPacket(self.filtersInput.text(), packetToAdd):
+            item = QtGui.QTreeWidgetItem(self.packetsList)
+            item.setText(0, str(packetToAdd.created))
+            item.setText(1, str(packetToAdd.id))
+            item.setText(2, str(packetToAdd.layers[1]['Source Address']))
+            item.setText(3, str(packetToAdd.layers[1]['Destination Address']))
+            item.setText(4, str(packetToAdd.layers[2]['LayerType']))
 
 
     def packet_selected(self):
