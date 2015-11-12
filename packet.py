@@ -236,27 +236,48 @@ class Packet(object):
             tcp_flags = 0 + (1 << 1) + (0 << 2) + (0 << 3) + (0 << 4) + (0 << 5)  # Flags: FIN + SYN + RST + PSH + ACK + URG
             tcp_header = pack('!HHLLBBHHH', tcp_source, tcp_dest, tcp_seq, tcp_ack_seq, tcp_offset_res, tcp_flags,  tcp_window, tcp_check, tcp_urg_ptr)
 
-            user_data = tcp_layer['Data']
+            tcp_user_data = tcp_layer['Data']
 
             # Preparation du pseudo header TCP
             ph_source_address = socket.inet_aton(ip_layer['Source Address'])
             ph_dest_address = socket.inet_aton(ip_layer['Destination Address'])
             ph_reserved = 0
             ph_protocol = socket.IPPROTO_TCP
-            ph_tcp_length = len(tcp_header) + len(user_data)
+            ph_tcp_length = len(tcp_header) + len(tcp_user_data)
             psh = pack('!4s4sBBH', ph_source_address, ph_dest_address, ph_reserved, ph_protocol, ph_tcp_length)
-            psh = psh + tcp_header + user_data
+            psh = psh + tcp_header + tcp_user_data
             # Calcul du checksum a l'aide du pseudo header
             tcp_check = network_utils.checksum(psh)
 
             # On reconstruit le header TCP
             tcp_header = pack('!HHLLBBH', tcp_source, tcp_dest, tcp_seq, tcp_ack_seq, tcp_offset_res, tcp_flags,  tcp_window) + pack('H', tcp_check) + pack('!H', tcp_urg_ptr)
             # On assemble le header IP + le header TCP + les data
-            packet = ip_header + tcp_header + user_data
+            packet = ip_header + tcp_header + tcp_user_data
         elif icmp_layer:
             print "icmp"
-        elif udp_header:
-            print "udp"
+        elif udp_layer:
+            udp_sport = udp_layer['Source port']
+            udp_dport = udp_layer['Destination port']
+            udp_data = udp_layer['Data']
+            udp_length = 8 + len(udp_data)
+            udp_check = 0  # Checksum
+            # On construit le header udp temporaire
+            udp_header = pack('!HHHH', udp_sport, udp_dport, udp_length, udp_check)
+
+            # Preparation du pseudo header UDP
+            ph_source_address = socket.inet_aton(ip_layer['Source Address'])
+            ph_dest_address = socket.inet_aton(ip_layer['Destination Address'])
+            ph_reserved = 0
+            ph_protocol = socket.IPPROTO_UDP
+            psh = pack('!4s4sBBH', ph_source_address, ph_dest_address, ph_reserved, ph_protocol, udp_length)
+            psh = psh + udp_header + udp_data
+            # Calcul du checksum a l'aide du pseudo header
+            udp_check = network_utils.checksum(psh)
+
+            # On reconstruit le header UDP
+            udp_header = pack('!HHH', udp_sport, udp_dport, udp_length) + pack('H', udp_check)
+            # On assemble le header IP + le header UDP + les data
+            packet = ip_header + udp_header + udp_data
         # Assemblage du paquet
         if packet is not None:
             ethernet = eth_header + packet
