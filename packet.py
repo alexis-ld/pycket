@@ -72,6 +72,8 @@ class Packet(object):
         eth_layer['Destination MAC'] = network_utils.eth_addr(self._packet[0:6])
         eth_layer['Source MAC'] = network_utils.eth_addr(self._packet[6:12])
 
+        eth_layer['Checksum'] = self._packet[-2:]
+
         # On rajoute la couche Ethernet recuperee dans le paquet a ajouter au resultat
         self.add_layer(eth_layer)
 
@@ -132,9 +134,9 @@ class Packet(object):
 
                 # on add la taille des header pour trouver le debut des data
                 h_size = eth_length + iph_length + tcph_length * 4
-                data_size = len(self._packet) - h_size
+                data_size = len(self._packet) - h_size - 2
 
-                data = self._packet[h_size:]
+                data = self._packet[h_size:h_size+data_size]
                 tcp_layer['Data'] = data
 
                 # On rajoute la couche TCP recuperee au paquet a rajouter au resultat
@@ -157,9 +159,9 @@ class Packet(object):
                 icmp_layer['Checksum'] = icmph[2]
 
                 h_size = eth_length + iph_length + icmph_length
-                data_size = len(self._packet) - h_size
+                data_size = len(self._packet) - h_size - 2
 
-                data = self._packet[h_size:]
+                data = self._packet[h_size:h_size+data_size]
                 icmp_layer['Data'] = data
 
                 # On rajoute la couche ICMP recuperee au paquet a rajouter au resultat
@@ -183,9 +185,9 @@ class Packet(object):
                 udp_layer['Checksum'] = udph[3]
 
                 h_size = eth_length + iph_length + udph_length
-                data_size = len(self._packet) - h_size
+                data_size = len(self._packet) - h_size - 2
 
-                data = self._packet[h_size:]
+                data = self._packet[h_size:h_size+data_size]
                 udp_layer['Data'] = data
 
                 # On rajoute la couche UDP recuperee au paquet a rajouter au resultat
