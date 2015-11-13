@@ -254,7 +254,18 @@ class Packet(object):
             # On assemble le header IP + le header TCP + les data
             packet = ip_header + tcp_header + tcp_user_data
         elif icmp_layer:
-            print "icmp"
+            icmp_type = icmp_layer['Type']
+            icmp_code = icmp_layer['Code']
+            icmp_check = 0  # Checksum
+            icmp_data = icmp_layer['Data']
+            # On construit le header icmp temporaire
+            icmp_header = pack(">BBH", icmp_type, icmp_code, icmp_check)
+            # Calcul du checksum
+            icmp_check = network_utils.checksum(icmp_header)
+            # On reconstruit le header
+            icmp_header = pack(">BBH", icmp_type, icmp_code, icmp_check)
+            # On assemble le header ip + le header icmp + les data
+            packet = ip_header + icmp_header + icmp_data
         elif udp_layer:
             udp_sport = udp_layer['Source port']
             udp_dport = udp_layer['Destination port']
