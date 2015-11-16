@@ -2,7 +2,7 @@ from PyQt4 import QtGui, QtCore  # Import the PyQt4 module we'll need
 import sys  # We need sys so that we can pass argv to QApplication
 import lib.hexdump as hexdump
 import packetFilter
-
+from PcapReader import PcapReader
 import mainWindow  # This file holds our MainWindow and all design related things
 
 import captureThread
@@ -36,7 +36,15 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
     def open_pcap(self):
          fileName = QtGui.QFileDialog.getOpenFileName(self, "Open File", "/home", "Pcap files (*.pcap)");
          if fileName:
-             print fileName
+             try:
+                 pcap_reader = PcapReader(fileName)
+                 pcap_reader.parse()
+                 for packet in pcap_reader.get_packets():
+                     self.add_packet(packet)
+             except ValueError:
+                QtGui.QMessageBox.information(self, "Error", "'"+fileName+"' is not a pcap file.")
+             except:
+                 print "Unexpected error:", sys.exc_info()[0]
 
     def start_capture(self):
         print('Starting capture from GUI')
