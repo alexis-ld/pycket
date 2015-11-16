@@ -9,6 +9,7 @@ import mainWindow  # This file holds our MainWindow and all design related thing
 import captureThread
 
 from PyQt4.QtCore import SIGNAL
+from pprint import pprint
 
 
 
@@ -90,9 +91,10 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         self.startCaptureBtn.setEnabled(True)
 
     def refresh_list(self):
+        print "toto"
         self.packetsList.clear()
         for packet in self.currentPackets:
-            if packetFilter.filterPacket(self.filtersInput.text(), packet):
+            if packetFilter.filterPacket(self.filtersInput.text(), packet) and len(packetToAdd.layers) == 3:
                 item = QtGui.QTreeWidgetItem(self.packetsList)
                 item.setText(0, str(packet.created))
                 item.setText(1, str(packet.id))
@@ -106,7 +108,7 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         self.currentPackets.append(packetToAdd)
         self.packetsCounter += 1
 
-        if packetFilter.filterPacket(self.filtersInput.text(), packetToAdd):
+        if packetFilter.filterPacket(self.filtersInput.text(), packetToAdd) and len(packetToAdd.layers) == 3:
             item = QtGui.QTreeWidgetItem(self.packetsList)
             item.setText(0, str(packetToAdd.created))
             item.setText(1, str(packetToAdd.id))
