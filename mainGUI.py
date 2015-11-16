@@ -91,7 +91,6 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         self.startCaptureBtn.setEnabled(True)
 
     def refresh_list(self):
-        print "toto"
         self.packetsList.clear()
         for packet in self.currentPackets:
             if packetFilter.filterPacket(self.filtersInput.text(), packet) and len(packetToAdd.layers) == 3:
