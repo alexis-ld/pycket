@@ -93,7 +93,7 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
     def refresh_list(self):
         self.packetsList.clear()
         for packet in self.currentPackets:
-            if packetFilter.filterPacket(self.filtersInput.text(), packet) and len(packetToAdd.layers) == 3:
+            if packetFilter.filterPacket(self.filtersInput.text(), packet) and len(packet.layers) == 3:
                 item = QtGui.QTreeWidgetItem(self.packetsList)
                 item.setText(0, str(packet.created))
                 item.setText(1, str(packet.id))
