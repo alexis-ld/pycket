@@ -3,6 +3,7 @@ import sys  # We need sys so that we can pass argv to QApplication
 import lib.hexdump as hexdump
 import packetFilter
 from PcapReader import PcapReader
+from PcapWriter import PcapWriter
 import mainWindow  # This file holds our MainWindow and all design related things
 
 import captureThread
@@ -19,6 +20,7 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         #Action binding
         self.startCaptureBtn.triggered.connect(self.start_capture)
         self.open_pcap_file.triggered.connect(self.open_pcap)
+        self.save_as_pcap_file.triggered.connect(self.save_pcap)
         self.exitBtn.triggered.connect(self.close)
 
         self.filtersApplyBtn.clicked.connect(self.refresh_list)
@@ -45,6 +47,18 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
                 QtGui.QMessageBox.information(self, "Error", "'"+fileName+"' is not a pcap file.")
              except:
                  print "Unexpected error:", sys.exc_info()[0]
+
+    def save_pcap(self):
+        if self.packetsCounter == 0:
+            QtGui.QMessageBox.information(self, "Error", "Packet list is empty.")
+            return
+        filename = QtGui.QFileDialog.getSaveFileName(self, "Save file", "/home", ".pcap")
+        if filename:
+            try:
+                pcap_writer = PcapWriter(filename+'.pcap')
+                pcap_writer.write(self.currentPackets)
+            except:
+                print "Unexpected error:", sys.exc_info()[0]
 
     def start_capture(self):
         print('Starting capture from GUI')
