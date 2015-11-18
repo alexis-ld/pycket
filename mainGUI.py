@@ -4,13 +4,12 @@ import lib.hexdump as hexdump
 import packetFilter
 from PcapReader import PcapReader
 from PcapWriter import PcapWriter
+from packetSender import PacketSender
+from packet import Packet
 import mainWindow  # This file holds our MainWindow and all design related things
-
+from forgingGUI import ForgingGUI
 import captureThread
-
 from PyQt4.QtCore import SIGNAL
-from pprint import pprint
-
 
 
 class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
@@ -20,6 +19,7 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
 
         #Action binding
         self.startCaptureBtn.triggered.connect(self.start_capture)
+        self.packet_forging_btn.triggered.connect(self.packet_forging)
         self.open_pcap_file.triggered.connect(self.open_pcap)
         self.save_as_pcap_file.triggered.connect(self.save_pcap)
         self.exitBtn.triggered.connect(self.close)
@@ -34,32 +34,6 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
 
         # On bind le clic sur un item de la liste
         self.packetsList.itemSelectionChanged.connect(self.packet_selected)
-
-
-    def open_pcap(self):
-         fileName = QtGui.QFileDialog.getOpenFileName(self, "Open File", "/home", "Pcap files (*.pcap)");
-         if fileName:
-             try:
-                 pcap_reader = PcapReader(fileName)
-                 pcap_reader.parse()
-                 for packet in pcap_reader.get_packets():
-                     self.add_packet(packet)
-             except ValueError:
-                QtGui.QMessageBox.information(self, "Error", "'"+fileName+"' is not a pcap file.")
-             except:
-                 print "Unexpected error:", sys.exc_info()[0]
-
-    def save_pcap(self):
-        if self.packetsCounter == 0:
-            QtGui.QMessageBox.information(self, "Error", "Packet list is empty.")
-            return
-        filename = QtGui.QFileDialog.getSaveFileName(self, "Save file", "/home", ".pcap")
-        if filename:
-            try:
-                pcap_writer = PcapWriter(filename+'.pcap')
-                pcap_writer.write(self.currentPackets)
-            except:
-                print "Unexpected error:", sys.exc_info()[0]
 
     def start_capture(self):
         print('Starting capture from GUI')
@@ -80,11 +54,49 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         # On lance la capture
         self.captureThread.start()
 
+    def packet_forging(self):
+        packet = None
+        forging_ui = ForgingGUI()
+        if forging_ui.exec_():
+            packet = forging_ui.get_packet()
+        if packet is not None:
+            try:
+                sender = PacketSender()
+                if sender.send_packet(packet):
+                    self.add_packet(packet)
+                else:
+                    QtGui.QMessageBox.information(self, "Error", "Error while sending packet.")
+            except:
+                print "Unexpected error:", sys.exc_info()[0]
+
+    def open_pcap(self):
+        fileName = QtGui.QFileDialog.getOpenFileName(self, "Open File", "/home", "Pcap files (*.pcap)");
+        if fileName:
+            try:
+                pcap_reader = PcapReader(fileName)
+                pcap_reader.parse()
+                for packet in pcap_reader.get_packets():
+                    self.add_packet(packet)
+            except ValueError:
+                QtGui.QMessageBox.information(self, "Error", "'"+fileName+"' is not a pcap file.")
+            except:
+                print "Unexpected error:", sys.exc_info()[0]
+
+    def save_pcap(self):
+        if self.packetsCounter == 0:
+            QtGui.QMessageBox.information(self, "Error", "Packet list is empty.")
+            return
+        filename = QtGui.QFileDialog.getSaveFileName(self, "Save file", "/home", ".pcap")
+        if filename:
+            try:
+                pcap_writer = PcapWriter(filename+'.pcap')
+                pcap_writer.write(self.currentPackets)
+            except:
+                print "Unexpected error:", sys.exc_info()[0]
 
     def error_user_privilege(self, msg):
         QtGui.QMessageBox.information(self, "Error", "Your user doesn't have the priviledges required to capture packets.\
         Please check your permissions. "+msg)
-
 
     def done(self):
         self.stopCaptureBtn.setEnabled(False)
@@ -101,7 +113,6 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
                 item.setText(3, str(packet.layers[1]['Destination Address']))
                 item.setText(4, str(packet.layers[2]['LayerType']))
 
-
     def add_packet(self, packetToAdd):
         packetToAdd.id = self.packetsCounter
         self.currentPackets.append(packetToAdd)
@@ -114,7 +125,6 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
             item.setText(2, str(packetToAdd.layers[1]['Source Address']))
             item.setText(3, str(packetToAdd.layers[1]['Destination Address']))
             item.setText(4, str(packetToAdd.layers[2]['LayerType']))
-
 
     def packet_selected(self):
 
@@ -152,9 +162,6 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
             item = QtGui.QTreeWidgetItem(self.tab_protocol_list)
             item.setText(0, str(key))
             item.setText(1, str(value))
-
-
-
 
 
 def main():
