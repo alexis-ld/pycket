@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Thu Nov 12 15:31:53 2015
-#      by: PyQt4 UI code generator 4.11.3
+# Created: Tue Nov 17 01:51:29 2015
+#      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -137,12 +137,14 @@ class Ui_MainWindow(object):
         self.toolBar.setObjectName(_fromUtf8("toolBar"))
         MainWindow.addToolBar(QtCore.Qt.LeftToolBarArea, self.toolBar)
         self.menuBar = QtGui.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 850, 29))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 850, 27))
         self.menuBar.setObjectName(_fromUtf8("menuBar"))
         self.menuFile = QtGui.QMenu(self.menuBar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
         self.menuCapture = QtGui.QMenu(self.menuBar)
         self.menuCapture.setObjectName(_fromUtf8("menuCapture"))
+        self.menuForging = QtGui.QMenu(self.menuBar)
+        self.menuForging.setObjectName(_fromUtf8("menuForging"))
         MainWindow.setMenuBar(self.menuBar)
         self.startCaptureBtn = QtGui.QAction(MainWindow)
         icon = QtGui.QIcon()
@@ -167,6 +169,11 @@ class Ui_MainWindow(object):
         icon3.addPixmap(QtGui.QPixmap(_fromUtf8("img/exit.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.exitBtn.setIcon(icon3)
         self.exitBtn.setObjectName(_fromUtf8("exitBtn"))
+        self.forge_packet = QtGui.QAction(MainWindow)
+        self.forge_packet.setIconVisibleInMenu(False)
+        self.forge_packet.setObjectName(_fromUtf8("forge_packet"))
+        self.packet_forging_btn = QtGui.QAction(MainWindow)
+        self.packet_forging_btn.setObjectName(_fromUtf8("packet_forging_btn"))
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.startCaptureBtn)
         self.toolBar.addAction(self.stopCaptureBtn)
@@ -177,8 +184,10 @@ class Ui_MainWindow(object):
         self.menuFile.addAction(self.exitBtn)
         self.menuCapture.addAction(self.startCaptureBtn)
         self.menuCapture.addAction(self.stopCaptureBtn)
+        self.menuForging.addAction(self.packet_forging_btn)
         self.menuBar.addAction(self.menuFile.menuAction())
         self.menuBar.addAction(self.menuCapture.menuAction())
+        self.menuBar.addAction(self.menuForging.menuAction())
 
         self.retranslateUi(MainWindow)
         self.packetDetail.setCurrentIndex(0)
@@ -199,8 +208,8 @@ class Ui_MainWindow(object):
         self.tab_packet_hexdump.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Cantarell\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">No packet selected</p></body></html>", None))
+"</style></head><body style=\" font-family:\'Droid Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Cantarell\'; font-size:11pt;\">No packet selected</span></p></body></html>", None))
         self.packetDetail.setTabText(self.packetDetail.indexOf(self.tab_packet), _translate("MainWindow", "Packet", None))
         self.tab_ethernet_list.headerItem().setText(0, _translate("MainWindow", "Field name", None))
         self.tab_ethernet_list.headerItem().setText(1, _translate("MainWindow", "Value", None))
@@ -214,6 +223,7 @@ class Ui_MainWindow(object):
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar", None))
         self.menuFile.setTitle(_translate("MainWindow", "File", None))
         self.menuCapture.setTitle(_translate("MainWindow", "Capture", None))
+        self.menuForging.setTitle(_translate("MainWindow", "Forging", None))
         self.startCaptureBtn.setText(_translate("MainWindow", "Start capture", None))
         self.startCaptureBtn.setToolTip(_translate("MainWindow", "Start a new capture", None))
         self.stopCaptureBtn.setText(_translate("MainWindow", "Stop capture", None))
@@ -222,4 +232,6 @@ class Ui_MainWindow(object):
         self.save_as_pcap_file.setText(_translate("MainWindow", "Save as pcap file", None))
         self.exitBtn.setText(_translate("MainWindow", "Exit", None))
         self.exitBtn.setToolTip(_translate("MainWindow", "Exit app", None))
+        self.forge_packet.setText(_translate("MainWindow", "Forge packet", None))
+        self.packet_forging_btn.setText(_translate("MainWindow", "Packet forging", None))
 
