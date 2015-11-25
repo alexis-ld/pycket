@@ -89,7 +89,7 @@ def extract(folder, filename):
     return extracted_images
     
 if __name__ == '__main__':
-    if (len(sys.argv) > 1):
+    if (len(sys.argv) > 2):
         extract(sys.argv[1], sys.argv[2])
     else:
         print "Usage:", sys.argv[0], "output_folder input_pcap_file"
