@@ -141,7 +141,7 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
                 item.setText(2, str(packet.layers[1]['Source Address']))
                 item.setText(3, str(packet.layers[1]['Destination Address']))
                 item.setText(4, str(packet.layers[2]['LayerType']))
-                if self.check_warningList(str(packetToAdd.layers[1]['Source Address'])):
+                if self.check_warningList(str(packet.layers[1]['Source Address'])):
                     self.set_row_bg(item, self.orange_bg, 4)
                 try:
                     if str(packet.layers[1]['Source Address']) in open('watchlist.txt').read():
