@@ -335,9 +335,17 @@ color: rgb(255, 255, 255);</string>
     </property>
     <addaction name="packet_forging_btn"/>
    </widget>
+   <widget class="QMenu" name="menuInspect">
+     <property name="title">
+       <string>Inspect</string>
+     </property>
+     <addaction name="add_ip_btn"/>
+     <addaction name="extract_images_btn"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuCapture"/>
    <addaction name="menuForging"/>
+   <addaction name="menuInspect"/>
   </widget>
   <action name="startCaptureBtn">
    <property name="icon">
@@ -365,7 +373,7 @@ color: rgb(255, 255, 255);</string>
    <property name="toolTip">
     <string>Stop current capture</string>
    </property>
-  </action>
+ </action>
   <action name="open_pcap_file">
    <property name="icon">
     <iconset>
@@ -404,6 +412,16 @@ color: rgb(255, 255, 255);</string>
    <property name="text">
     <string>Packet forging</string>
    </property>
+  </action>
+  <action name="add_ip_btn">
+    <property name="text">
+      <string>Add IP to watch</string>
+    </property>
+  </action>
+  <action name="extract_images_btn">
+    <property name="text">
+      <string>Extract images from .pcap file</string>
+    </property>
   </action>
  </widget>
  <resources/>
