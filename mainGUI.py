@@ -92,7 +92,7 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         if fileName:
             ret = extracter.extract(fileName)
             if ret > 0:
-                QtGui.QMessageBox.information(self, "Done", "Extraction done. Check carved_images/.")
+                QtGui.QMessageBox.information(self, "Done", "Extraction done. Check the extracted folder.")
             else:
                  QtGui.QMessageBox.information(self, "Done", "No images were found.")
             

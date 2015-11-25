@@ -83,7 +83,7 @@ def extract(filename):
                 image, image_type = extract_images(h, http_payload, boundaries)
                 if image is not None and image_type is not None:
                     filename = '%s-pycket_%s.%s' %(clean_name, extracted_images, image_type)
-                    fd = open('%s/%s' % (PIC_DIR, clean_name), 'wb')
+                    fd = open('%s/%s' % (PIC_DIR, filename), 'wb')
                     fd.write(image)
                     fd.close()
                     extracted_images += 1
