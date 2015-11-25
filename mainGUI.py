@@ -8,7 +8,9 @@ from packetSender import PacketSender
 from packet import Packet
 import mainWindow  # This file holds our MainWindow and all design related things
 from forgingGUI import ForgingGUI
+from addIPGUI import AddIPGUI
 import captureThread
+import extracter
 from PyQt4.QtCore import SIGNAL
 
 
@@ -20,6 +22,8 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         #Action binding
         self.startCaptureBtn.triggered.connect(self.start_capture)
         self.packet_forging_btn.triggered.connect(self.packet_forging)
+        self.add_ip_btn.triggered.connect(self.add_ip)
+        self.extract_images_btn.triggered.connect(self.extract_images)
         self.open_pcap_file.triggered.connect(self.open_pcap)
         self.save_as_pcap_file.triggered.connect(self.save_pcap)
         self.exitBtn.triggered.connect(self.close)
@@ -35,6 +39,15 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
         # On bind le clic sur un item de la liste
         self.packetsList.itemSelectionChanged.connect(self.packet_selected)
 
+        # warning list
+        open('watchlist.txt', 'a').close()
+        self.warningList = []
+        self.tmpList = []
+        self.red_bg = QtGui.QBrush(QtGui.QColor("red"))
+        self.red_bg.setStyle(QtCore.Qt.SolidPattern)
+        self.orange_bg = QtGui.QBrush(QtGui.QColor(255, 128, 0))
+        self.orange_bg.setStyle(QtCore.Qt.SolidPattern)
+        
     def start_capture(self):
         print('Starting capture from GUI')
         self.captureThread = captureThread.Capture()
@@ -69,8 +82,22 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
             except:
                 print "Unexpected error:", sys.exc_info()[0]
 
+    def add_ip(self):
+        add_ip_ui = AddIPGUI()
+        if add_ip_ui.exec_():
+            self.refresh_list()
+
+    def extract_images(self):
+        fileName = QtGui.QFileDialog.getOpenFileName(self, "Open File to extract images", "/home", "Pcap/Cap files (*.pcap *.cap)")
+        if fileName:
+            ret = extracter.extract(fileName)
+            if ret > 0:
+                QtGui.QMessageBox.information(self, "Done", "Extraction done. Check carved_images/.")
+            else:
+                 QtGui.QMessageBox.information(self, "Done", "No images were found.")
+            
     def open_pcap(self):
-        fileName = QtGui.QFileDialog.getOpenFileName(self, "Open File", "/home", "Pcap files (*.pcap)");
+        fileName = QtGui.QFileDialog.getOpenFileName(self, "Open File", "/home", "Pcap files (*.pcap)")
         if fileName:
             try:
                 pcap_reader = PcapReader(fileName)
@@ -112,20 +139,52 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
                 item.setText(2, str(packet.layers[1]['Source Address']))
                 item.setText(3, str(packet.layers[1]['Destination Address']))
                 item.setText(4, str(packet.layers[2]['LayerType']))
+                if self.check_warningList(str(packetToAdd.layers[1]['Source Address'])):
+                    self.set_row_bg(item, self.orange_bg, 4)
+                try:
+                    if str(packet.layers[1]['Source Address']) in open('watchlist.txt').read():
+                        self.set_row_bg(item, self.red_bg, 4)
+                except:
+                    print "Unexpected error:", sys.exc_info()[0]
 
+                
+    def check_warningList(self, ip):
+        if ip in self.warningList:
+            return True
+        return False
+            
+    def update_warningList(self, ip):
+        self.tmpList.append(ip)
+        if self.tmpList.count(ip) > 50:
+            self.warningList.append(ip)
+            self.tmpList = [item for item in self.tmpList if item != ip]
+
+    def set_row_bg(self, item, bg, n):
+        for i in range(n + 1):
+            item.setBackground(i, self.orange_bg)
+        
     def add_packet(self, packetToAdd):
         packetToAdd.id = self.packetsCounter
         self.currentPackets.append(packetToAdd)
         self.packetsCounter += 1
 
         if packetFilter.filterPacket(self.filtersInput.text(), packetToAdd) and len(packetToAdd.layers) == 3:
+            self.update_warningList(str(packetToAdd.layers[1]['Source Address']))
             item = QtGui.QTreeWidgetItem(self.packetsList)
             item.setText(0, str(packetToAdd.created))
             item.setText(1, str(packetToAdd.id))
             item.setText(2, str(packetToAdd.layers[1]['Source Address']))
             item.setText(3, str(packetToAdd.layers[1]['Destination Address']))
             item.setText(4, str(packetToAdd.layers[2]['LayerType']))
+            if self.check_warningList(str(packetToAdd.layers[1]['Source Address'])):
+                self.set_row_bg(item, self.orange_bg, 4)
+            try:
+                if str(packetToAdd.layers[1]['Source Address']) in open('watchlist.txt').read():
+                   self.set_row_bg(item, self.red_bg, 4)
+            except:
+                print "Unexpected error:", sys.exc_info()[0]
 
+            
     def packet_selected(self):
 
         # on clear

@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Tue Nov 17 01:51:29 2015
-#      by: PyQt4 UI code generator 4.10.4
+# Created: Wed Nov 25 03:06:51 2015
+#      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -145,6 +145,8 @@ class Ui_MainWindow(object):
         self.menuCapture.setObjectName(_fromUtf8("menuCapture"))
         self.menuForging = QtGui.QMenu(self.menuBar)
         self.menuForging.setObjectName(_fromUtf8("menuForging"))
+        self.menuInspect = QtGui.QMenu(self.menuBar)
+        self.menuInspect.setObjectName(_fromUtf8("menuInspect"))
         MainWindow.setMenuBar(self.menuBar)
         self.startCaptureBtn = QtGui.QAction(MainWindow)
         icon = QtGui.QIcon()
@@ -174,6 +176,10 @@ class Ui_MainWindow(object):
         self.forge_packet.setObjectName(_fromUtf8("forge_packet"))
         self.packet_forging_btn = QtGui.QAction(MainWindow)
         self.packet_forging_btn.setObjectName(_fromUtf8("packet_forging_btn"))
+        self.add_ip_btn = QtGui.QAction(MainWindow)
+        self.add_ip_btn.setObjectName(_fromUtf8("add_ip_btn"))
+        self.extract_images_btn = QtGui.QAction(MainWindow)
+        self.extract_images_btn.setObjectName(_fromUtf8("extract_images_btn"))
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.startCaptureBtn)
         self.toolBar.addAction(self.stopCaptureBtn)
@@ -185,9 +191,12 @@ class Ui_MainWindow(object):
         self.menuCapture.addAction(self.startCaptureBtn)
         self.menuCapture.addAction(self.stopCaptureBtn)
         self.menuForging.addAction(self.packet_forging_btn)
+        self.menuInspect.addAction(self.add_ip_btn)
+        self.menuInspect.addAction(self.extract_images_btn)
         self.menuBar.addAction(self.menuFile.menuAction())
         self.menuBar.addAction(self.menuCapture.menuAction())
         self.menuBar.addAction(self.menuForging.menuAction())
+        self.menuBar.addAction(self.menuInspect.menuAction())
 
         self.retranslateUi(MainWindow)
         self.packetDetail.setCurrentIndex(0)
@@ -224,6 +233,7 @@ class Ui_MainWindow(object):
         self.menuFile.setTitle(_translate("MainWindow", "File", None))
         self.menuCapture.setTitle(_translate("MainWindow", "Capture", None))
         self.menuForging.setTitle(_translate("MainWindow", "Forging", None))
+        self.menuInspect.setTitle(_translate("MainWindow", "Inspect", None))
         self.startCaptureBtn.setText(_translate("MainWindow", "Start capture", None))
         self.startCaptureBtn.setToolTip(_translate("MainWindow", "Start a new capture", None))
         self.stopCaptureBtn.setText(_translate("MainWindow", "Stop capture", None))
@@ -234,4 +244,6 @@ class Ui_MainWindow(object):
         self.exitBtn.setToolTip(_translate("MainWindow", "Exit app", None))
         self.forge_packet.setText(_translate("MainWindow", "Forge packet", None))
         self.packet_forging_btn.setText(_translate("MainWindow", "Packet forging", None))
+        self.add_ip_btn.setText(_translate("MainWindow", "Add IP to watch", None))
+        self.extract_images_btn.setText(_translate("MainWindow", "Extract images from .pcap file", None))
 
