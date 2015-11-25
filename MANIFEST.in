@@ -1,0 +1,4 @@
+include *.md
+recursive-include pycket *.txt
+recursive-include pycket *.png *.jpg
+recursive-include pycket *.ui *.cap *.pcap
