@@ -54,3 +54,6 @@ docs/_build/
 
 # PyBuilder
 target/
+
+#stdeb
+deb_dist/
