@@ -60,9 +60,8 @@ def extract_images(headers, http_payload, boundaries):
         return None, None
     return image, image_type
 
-def extract(filename):
+def extract(folder, filename):
     http_payload = ''
-    PIC_DIR = "extracted_images"
     extracted_images = 1
     pcap = PcapReader(filename)
     pcap.parse()
@@ -83,11 +82,14 @@ def extract(filename):
                 image, image_type = extract_images(h, http_payload, boundaries)
                 if image is not None and image_type is not None:
                     filename = '%s-pycket_%s.%s' %(clean_name, extracted_images, image_type)
-                    fd = open('%s/%s' % (PIC_DIR, filename), 'wb')
+                    fd = open('%s/%s' % (folder, filename), 'wb')
                     fd.write(image)
                     fd.close()
                     extracted_images += 1
     return extracted_images
     
 if __name__ == '__main__':
-    extract(sys.argv[1])
+    if (len(sys.argv) > 1):
+        extract(sys.argv[1], sys.argv[2])
+    else:
+        print "Usage:", sys.argv[0], "output_folder input_pcap_file"

@@ -90,11 +90,13 @@ class pycketGUI(QtGui.QMainWindow, mainWindow.Ui_MainWindow):
     def extract_images(self):
         fileName = QtGui.QFileDialog.getOpenFileName(self, "Open File to extract images", "/home", "Pcap/Cap files (*.pcap *.cap)")
         if fileName:
-            ret = extracter.extract(fileName)
-            if ret > 0:
-                QtGui.QMessageBox.information(self, "Done", "Extraction done. Check the extracted folder.")
-            else:
-                 QtGui.QMessageBox.information(self, "Done", "No images were found.")
+            folderPath = QtGui.QFileDialog.getExistingDirectory(self, "Choose a directory to save the extracted images")
+            if folderPath:
+                ret = extracter.extract(folderPath, fileName)
+                if ret > 0:
+                    QtGui.QMessageBox.information(self, "Done", "Extraction done. Check the extracted folder.")
+                else:
+                    QtGui.QMessageBox.information(self, "Done", "No images were found.")
             
     def open_pcap(self):
         fileName = QtGui.QFileDialog.getOpenFileName(self, "Open File", "/home", "Pcap files (*.pcap)")
